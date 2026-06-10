@@ -1,0 +1,51 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <style>
+        body { font-family: Arial; margin: 0; background: #f0f0f0; }
+        .navbar { background: #4CAF50; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .navbar h1 { margin: 0; font-size: 20px; }
+        .navbar a { color: white; text-decoration: none; font-size: 14px; }
+        .container { padding: 30px; }
+        .welcome { background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        .cards { display: flex; gap: 20px; flex-wrap: wrap; }
+        .card { background: white; padding: 20px; border-radius: 10px; width: 200px; text-align: center; text-decoration: none; color: black; border: 1px solid #ddd; }
+        .card:hover { background: #e8f5e9; }
+        .card h3 { margin: 10px 0 5px; }
+        .card p { color: gray; font-size: 13px; margin: 0; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>COSC Club System</h1>
+        <a href="/logout">Logout</a>
+    </div>
+    <div class="container">
+        <div class="welcome">
+            <h2>Welcome, {{ name }}!</h2>
+            <p>You are logged in as <strong>{{ role }}</strong></p>
+        </div>
+        <div class="cards">
+            <a href="/events" class="card">
+                <h3>Events</h3>
+                <p>View and manage events</p>
+            </a>
+            {% if role == 'admin' or role == 'manager' %}
+            <a href="/members" class="card">
+                <h3>Members</h3>
+                <p>Manage club members</p>
+            </a>
+            <a href="/expenses" class="card">
+                <h3>Expenses</h3>
+                <p>Track club expenses</p>
+            </a>
+            <a href="/reports" class="card">
+                <h3>Reports</h3>
+                <p>View club reports</p>
+            </a>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>
