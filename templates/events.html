@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Events</title>
+    <style>
+        body { font-family: Arial; margin: 0; background: #f0f0f0; }
+        .navbar { background: #4CAF50; padding: 15px 30px; color: white; display: flex; justify-content: space-between; align-items: center; }
+        .navbar h1 { margin: 0; font-size: 20px; }
+        .navbar a { color: white; text-decoration: none; margin-left: 15px; }
+        .container { padding: 30px; }
+        .btn { background: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; font-size: 14px; }
+        .form-box { background: white; padding: 20px; border-radius: 10px; margin-bottom: 30px; max-width: 500px; }
+        input, select { width: 100%; padding: 10px; margin: 8px 0; box-sizing: border-box; border: 1px solid #ddd; border-radius: 5px; }
+        table { width: 100%; background: white; border-radius: 10px; border-collapse: collapse; }
+        th { background: #4CAF50; color: white; padding: 12px; text-align: left; }
+        td { padding: 12px; border-bottom: 1px solid #eee; }
+        .tag { background: #e8f5e9; color: #2e7d32; padding: 3px 10px; border-radius: 20px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <h1>COSC Club System</h1>
+        <div>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+    <div class="container">
+        {% if role == 'admin' or role == 'manager' %}
+        <div class="form-box">
+            <h3>Create New Event</h3>
+            {% if error %}<p style="color:red">{{ error }}</p>{% endif %}
+            {% if success %}<p style="color:green">{{ success }}</p>{% endif %}
+            <form method="POST">
+                <input type="text" name="title" placeholder="Event Title" required />
+                <input type="date" name="date" required />
+                <input type="number" name="capacity" placeholder="Capacity" required />
+                <button type="submit" class="btn">Create Event</button>
+            </form>
+        </div>
+        {% endif %}
+        <h3>All Events</h3>
+        <table>
+            <tr>
+                <th>Title</th>
+                <th>Date</th>
+                <th>Capacity</th>
+                <th>Action</th>
+            </tr>
+            {% for event in events %}
+            <tr>
+                <td>{{ event.title }}</td>
+                <td>{{ event.date }}</td>
+                <td>{{ event.capacity }}</td>
+                <td>
+                    <a href="/register/{{ event.id }}" class="btn">Register</a>
+                </td>
+            </tr>
+            {% else %}
+            <tr><td colspan="4" style="text-align:center; color:gray;">No events yet</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>

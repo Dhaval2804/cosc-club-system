@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, session
-from models import db, User
+from models import db, User, Event, Registration
 from flask_bcrypt import Bcrypt
 
 app = Flask(__name__)
@@ -43,6 +43,39 @@ def dashboard():
 def logout():
     session.clear()
     return redirect('/login')
+@app.route('/events', methods=['GET', 'POST'])
+def events():
+    if 'user_id' not in session:
+        return redirect('/login')
+    error = None
+    success = None
+    if request.method == 'POST':
+        title = request.form['title']
+        date = request.form['date']
+        capacity = request.form['capacity']
+        new_event = Event(title=title, date=date, capacity=int(capacity), club_id=1)
+        db.session.add(new_event)
+        db.session.commit()
+        success = 'Event created successfully!'
+    all_events = Event.query.all()
+    return render_template('events.html', events=all_events, role=session['role'], error=error, success=success)
+
+@app.route('/register/<int:event_id>')
+def register_event(event_id):
+    if 'user_id' not in session:
+        return redirect('/login')
+    event = Event.query.get(event_id)
+    existing = Registration.query.filter_by(user_id=session['user_id'], event_id=event_id).first()
+    if existing:
+        return redirect('/events')
+    registrations = Registration.query.filter_by(event_id=event_id).count()
+    if registrations >= event.capacity:
+        return redirect('/events')
+    new_reg = Registration(user_id=session['user_id'], event_id=event_id)
+    db.session.add(new_reg)
+    db.session.commit()
+    return redirect('/events')
+
 
 if __name__ == '__main__':
     app.run(debug=True)
